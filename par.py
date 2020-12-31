@@ -37,7 +37,6 @@ class Pair:
         t2.start()
 
         t1.join()
-        print("t1 acabó")
         t2.join()
         print("El nodo principal se ha establecido")
 

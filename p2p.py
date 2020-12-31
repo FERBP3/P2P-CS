@@ -36,12 +36,9 @@ class P2P:
             new_client, _ = self.socket_servidor.accept()
             if len(self.server_conn) == 1:
                 self.envia("@cancel_accept", 0)
-                print("Enviando cancelación al otro nodo")
-                self.socket_servidor.close()
             self.server_conn.append(new_client)
             print("{}: Nueva conexión".format(self.addr[1]))
         except:
-            print("cerrando hilo")
             sys.exit(0)
 
     def escucha(self, pos):
@@ -51,9 +48,8 @@ class P2P:
                 print("Se recibió de {}: {}".format(pos, data))
 
                 if data == "@cancel_accept":
-                    self.socket_servidor.shutdown(socket.SHUT_WR)
+                    self.socket_servidor.shutdown(socket.SHUT_RD)
                     self.socket_servidor.close()
-                    print("conexión cerrada.")
                 if len(data) == 0:
                     print("Error, no se recibieron datos -> pos: {}".format(pos))
                     break
