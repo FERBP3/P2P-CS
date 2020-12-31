@@ -44,17 +44,23 @@ class P2P:
     def escucha(self, pos):
         while True:
             try:
+                print("pos = {}".format(pos))
                 data = self.server_conn[pos].recv(1024).decode("utf-8")
                 print("Se recibió de {}: {}".format(pos, data))
 
                 if data == "@cancel_accept":
-                    self.socket_servidor.shutdown(socket.SHUT_RD)
+                    print("shutdown...")
+                    self.socket_servidor.shutdown(socket.SHUT_RDWR)
+                    print("cerrando el socket")
                     self.socket_servidor.close()
                 if len(data) == 0:
                     print("Error, no se recibieron datos -> pos: {}".format(pos))
                     break
             except Exception as e:
-                print("Error en escucha: ",e)
+                if e.errno == 57:
+                    self.socket_servidor.close()
+                    continue
+                print("{} Error en escucha: {}, pos={}".format(self.addr[1], e, pos))
                 break
 
     # Se le envía la información al cliente o al par

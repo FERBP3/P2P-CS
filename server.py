@@ -5,7 +5,7 @@ import random
 port = int(sys.argv[random.randint(1, 2)])
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect(('localhost', port))
-print("Conectado. Mandando mensaje...")
+print("Conectado al puerto {}. Mandando mensaje...".format(port))
 
 try:
     while True:
