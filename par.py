@@ -8,8 +8,8 @@ class Pair:
         self.config_nodes()
 
     def config_nodes(self):
-        self.nodes[0] = p2p.P2P(self.ports[0], self.ports[1])
-        self.nodes[1] = p2p.P2P(self.ports[1], self.ports[0])
+        self.nodes[0] = p2p.P2P(self.ports[0], self.ports[1], "a-b")
+        self.nodes[1] = p2p.P2P(self.ports[1], self.ports[0], "b-z")
         self.nodes[0].server_conf()
         self.nodes[1].server_conf()
 
@@ -45,6 +45,6 @@ class Pair:
         else:
             threading.Thread(target=self.nodes[1].escucha, args=(1,)).start()
 
-pair = Pair([8000, 8010])
+pair = Pair([8000, 8010, 8080])
 pair.start_nodes()
 
