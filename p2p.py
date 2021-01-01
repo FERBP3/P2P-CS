@@ -53,6 +53,8 @@ class P2P:
                 elif len(data) == 0:
                     print("Error, no se recibieron datos -> pos: {}".format(pos))
                     break
+                elif not data.startswith("@"):
+                    self.envia("Comando no válido", 1)
                 else:
                     self.exec_command(data)
             except Exception as e:
@@ -78,13 +80,27 @@ class P2P:
         if command.startswith("@p2pR"):
             command = command.split(" ", 1)
             res = self.dao.exec_command(command[1])
-            self.envia("@p2pA {}".format(res), 0)
+            print(res)
+            if command[1].startswith("@list"):
+                self.envia("@p2pA @list {}".format(res), 0)
+            else:
+                self.envia("@p2pA {}".format(res), 0)
         elif command.startswith("@p2pA"):
             res = command.split(" ", 1)
-            self.envia(command[1], 1)
+            if res[1].startswith("@list"):
+                some_words = res[1].split(" ", 1)[1]
+                other_words = self.dao.exec_command("@list")
+                all_words = "{} {}".format(some_words, other_words)
+                self.envia(all_words, 1)
+            else:
+                self.envia(res[1], 1)
+        elif command.startswith("@list"):
+            if len(self.server_conn) > 1:
+                self.envia("@p2pR {}".format(command), 0)
         else:
             res = self.dao.exec_command(command)
-            if res.startswith("Error"):
+            print(res)
+            if res.startswith("RangeError"):
                 self.envia("@p2pR {}".format(command), 0)
             else:
                 self.envia(res, 1)
