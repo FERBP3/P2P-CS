@@ -51,18 +51,30 @@ class P2P:
                     self.socket_servidor.shutdown(socket.SHUT_RDWR)
                     self.socket_servidor.close()
                 elif len(data) == 0:
-                    print("Error, no se recibieron datos -> pos: {}".format(pos))
+                    print("{} : Error, no se recibieron datos -> pos: {}".format(self.addr[1], pos))
                     break
                 elif not data.startswith("@"):
                     self.envia("Comando no válido", 1)
+                elif data.startswith("@exit"):
+                    print("{} : cerrando conexiones".format(self.addr[1]))
+                    self.server_conn[0].shutdown(socket.SHUT_RDWR)
+                    self.server_conn[0].close()
+                    self.server_conn[1].shutdown(socket.SHUT_RDWR)
+                    self.server_conn[1].close()
+                    self.client_conn[0].shutdown(socket.SHUT_RDWR)
+                    self.client_conn[0].close()
+                    print("conexiones del nodo principal cerradas")
+                    break
                 else:
                     self.exec_command(data)
             except Exception as e:
                 if e.errno == 57:
+                    print("error 57 volviendo al loop")
                     self.socket_servidor.close()
                     continue
-                print("{} Error en escucha: {}, pos={}".format(self.addr[1], e, pos))
-                break
+                else:
+                    print("{} Error en escucha: {}, pos={}".format(self.addr[1], e, pos))
+                    break
 
     # Se le envía la información al cliente o al par
     def envia(self, datos, client):

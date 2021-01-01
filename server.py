@@ -19,6 +19,8 @@ class Server:
             try:
                 mensaje = input()
                 self.client_conn.sendall(mensaje.encode())
+                if mensaje == "@exit":
+                    break
             except Exception as e:
                 print(e)
                 break
@@ -28,6 +30,7 @@ class Server:
             try:
                 data = self.client_conn.recv(1024).decode("utf-8")
                 if len(data) == 0:
+                    print("conexion terminada")
                     break
                 print(data)
             except Exception as e:
