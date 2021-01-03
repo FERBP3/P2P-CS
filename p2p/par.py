@@ -1,5 +1,6 @@
 import p2p
 import threading
+import sys
 
 class Pair:
     def __init__(self, ports):
@@ -45,6 +46,7 @@ class Pair:
         else:
             threading.Thread(target=self.nodes[1].escucha, args=(1,)).start()
 
-pair = Pair([8000, 8010, 8080])
+ports = [int(sys.argv[1]), int(sys.argv[2])]
+pair = Pair(ports)
 pair.start_nodes()
 
